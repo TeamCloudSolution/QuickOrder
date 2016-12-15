@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="./../resources/simple.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Pedidos</h1>
+
+		<h:form id="frmTabla">
+
+			<p:confirmDialog global="true" appendTo="@(body)">
+				<p:commandButton value="Si" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:dataTable var="item" value="#{gestionFacturaBean.lst}" first="0"
+				paginator="true" rows="20"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,20,30,40,50,100"
+				emptyMessage="Ningun registro encontrado..." selectionMode="single"
+				selection="#{gestionFacturaBean.selected}" rowKey="#{item.id}">
+
+				<p:column headerText="ACCION" width="60">
+					<p:commandLink actionListener="#{gestionFacturaBean.editar(item)}"
+						update=":dlgNuevoEditarId :frmDatos">
+						<h:graphicImage alt="Editar" url="/resources/icons/ver.png" />
+					</p:commandLink>
+
+				</p:column>
+
+				<p:column filterBy="#{item.id}" sortBy="#{item.id}"
+					filterMatchMode="contains">
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{item.id}" />
+				</p:column>
+
+				<p:column filterBy="#{item.cliente.ci}" sortBy="#{item.cliente.ci}"
+					filterMatchMode="contains">
+					<f:facet name="header">NIT</f:facet>
+					<h:outputText value="#{item.cliente.ci}" />
+				</p:column>
+
+				<p:column filterBy="#{item.cliente.nombreCompleto}"
+					sortBy="#{item.cliente.nombreCompleto}" filterMatchMode="contains">
+					<f:facet name="header">RAZON SOCIAL</f:facet>
+					<h:outputText value="#{item.cliente.nombreCompleto}" />
+				</p:column>
+
+				<p:column filterBy="#{item.mesa.numero}"
+					sortBy="#{item.mesa.numero}" filterMatchMode="contains">
+					<f:facet name="header">NRO. MESA</f:facet>
+					<h:outputText value="#{item.mesa.numero}" />
+				</p:column>
+
+				<p:column filterBy="#{item.estado}" sortBy="#{item.estado}"
+					filterMatchMode="contains">
+					<f:facet name="header">ESTADO</f:facet>
+					<h:outputText value="#{item.estado}" />
+				</p:column>
+
+				<p:column filterBy="#{item.fechaHora}" sortBy="#{item.fechaHora}"
+					filterMatchMode="contains">
+					<f:facet name="header">FECHA</f:facet>
+					<h:outputText value="#{item.fechaHora}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="dlgNuevoEditarId" widgetVar="dlgNuevoEditar"
+			closeOnEscape="false" header="Detalle del pedido" modal="true"
+			appendTo="@(body)" visible="#{gestionFacturaBean.visibleNuevoEditar}"
+			closable="false">
+
+			<h:form id="frmDatos">
+
+				<p:messages showDetail="true" showSummary="false" autoUpdate="true"
+					closable="true" />
+
+
+				<p:panel id="panelId">
+					<h:outputText id="display"
+						value="#{gestionFacturaBean.formatoFactura}" escape="false" />
+
+					<p:barcode value="#{gestionFacturaBean.qr}" type="qr" />
+				</p:panel>
+
+				<p:separator />
+
+				<h:panelGrid id="pnlGrdControl" columns="3" cellspacing="2"
+					cellpadding="0">
+
+					<p:commandButton value="IMPRIMIR" icon="ui-icon-disk"
+						style="width:100px;"
+						actionListener="#{gestionFacturaBean.atendido()}"
+						update=":dlgNuevoEditarId :frmTabla">
+						<p:printer target="panelId" />
+					</p:commandButton>
+
+					<p:commandButton value="Salir" icon="ui-icon-close"
+						style="width:100px;"
+						actionListener="#{gestionFacturaBean.setVisibleNuevoEditar(false)}"
+						update=":dlgNuevoEditarId" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

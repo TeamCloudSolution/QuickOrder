@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="./../resources/simple.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Gestión de empresa</h1>
+
+		<h:form id="frmTabla">
+
+			<p:confirmDialog global="true" appendTo="@(body)">
+				<p:commandButton value="Si" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:commandButton value="Editar" icon="ui-icon-pencil"
+				style="width:140px;" actionListener="#{gestionEmpresaBean.editar()}"
+				update=":dlgNuevoEditarId :frmDatos" />
+
+			<p:dataTable var="item" value="#{gestionEmpresaBean.lst}" first="0"
+				paginator="true" rows="20"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,20,30,40,50,100"
+				emptyMessage="Ningun registro encontrado..." selectionMode="single"
+				selection="#{gestionEmpresaBean.selected}" rowKey="#{item.id}">
+
+				<p:column headerText="ACCION" width="60">
+					<p:commandLink actionListener="#{gestionEmpresaBean.editar(item)}"
+						update=":dlgNuevoEditarId :frmDatos">
+						<h:graphicImage alt="Editar" url="/resources/icons/edit.png" />
+					</p:commandLink>
+
+				</p:column>
+
+				<p:column filterBy="#{item.nombre}" sortBy="#{item.nombre}"
+					filterMatchMode="contains">
+					<f:facet name="header">NOMBRE</f:facet>
+					<h:outputText value="#{item.nombre}" />
+				</p:column>
+
+				<p:column filterBy="#{item.sucursal}" sortBy="#{item.sucursal}"
+					filterMatchMode="contains">
+					<f:facet name="header">Sucursal</f:facet>
+					<h:outputText value="#{item.sucursal}" />
+				</p:column>
+
+				<p:column filterBy="#{item.direccion}" sortBy="#{item.direccion}"
+					filterMatchMode="contains">
+					<f:facet name="header">Direccion</f:facet>
+					<h:outputText value="#{item.direccion}" />
+				</p:column>
+
+				<p:column filterBy="#{item.nit}" sortBy="#{item.nit}"
+					filterMatchMode="contains">
+					<f:facet name="header">Nit</f:facet>
+					<h:outputText value="#{item.nit}" />
+				</p:column>
+
+				<p:column filterBy="#{item.nroAutorizacion}"
+					sortBy="#{item.nroAutorizacion}" filterMatchMode="contains">
+					<f:facet name="header">Nro. Autorizacion</f:facet>
+					<h:outputText value="#{item.nroAutorizacion}" />
+				</p:column>
+
+				<p:column filterBy="#{item.comentarioFactura}"
+					sortBy="#{item.comentarioFactura}" filterMatchMode="contains">
+					<f:facet name="header">Comentario Factura</f:facet>
+					<h:outputText value="#{item.comentarioFactura}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="dlgNuevoEditarId" widgetVar="dlgNuevoEditar"
+			closeOnEscape="false" header="Nuevo/editar registro" modal="true"
+			appendTo="@(body)" visible="#{gestionEmpresaBean.visibleNuevoEditar}"
+			closable="false">
+
+			<h:form id="frmDatos">
+
+				<p:messages showDetail="true" showSummary="false" autoUpdate="true"
+					closable="true" />
+
+				<h:panelGrid id="pnlGrdData" columns="2" cellspacing="2"
+					cellpadding="0">
+
+					<p:outputLabel value="Id:" rendered="#{!gestionEmpresaBean.nuevo}" />
+					<p:outputLabel value="#{gestionEmpresaBean.entidad.id}"
+						rendered="#{!gestionEmpresaBean.nuevo}" />
+
+					<p:outputLabel for="tbxNombre" value="Nombre:" />
+					<p:inputText id="tbxNombre" label="Nombre" size="50"
+						value="#{gestionEmpresaBean.entidad.nombre}" />
+
+					<p:outputLabel for="tbxSucursal" value="Sucursal:" />
+					<p:inputText id="tbxSucursal" label="Sucursal" size="50"
+						value="#{gestionEmpresaBean.entidad.sucursal}" />
+
+					<p:outputLabel for="tbxDireccion" value="Direccion:" />
+					<p:inputText id="tbxDireccion" label="Direccion" size="50"
+						value="#{gestionEmpresaBean.entidad.direccion}" />
+
+					<p:outputLabel for="tbxNit" value="Nit:" />
+					<p:inputText id="tbxNit" label="Nit" size="50"
+						value="#{gestionEmpresaBean.entidad.nit}" />
+
+					<p:outputLabel for="tbxNroAutorizacion" value="Nro. Autorizacion:" />
+					<p:inputText id="tbxNroAutorizacion" label="Nro. Autorizacion"
+						size="50" value="#{gestionEmpresaBean.entidad.nroAutorizacion}" />
+
+					<p:outputLabel for="tbxComentario" value="Comentario Factura:" />
+					<p:inputText id="tbxComentario" label="Comentario Factura"
+						size="50" value="#{gestionEmpresaBean.entidad.comentarioFactura}" />
+
+				</h:panelGrid>
+
+				<p:separator />
+
+				<h:panelGrid id="pnlGrdControl" columns="3" cellspacing="2"
+					cellpadding="0">
+
+					<p:commandButton value="Guardar" icon="ui-icon-disk"
+						style="width:100px;"
+						actionListener="#{gestionEmpresaBean.guardar()}"
+						update=":dlgNuevoEditarId :frmDatos:pnlGrdData :frmTabla" />
+
+					<p:commandButton value="Salir" icon="ui-icon-close"
+						style="width:100px;"
+						actionListener="#{gestionEmpresaBean.setVisibleNuevoEditar(false)}"
+						update=":dlgNuevoEditarId" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

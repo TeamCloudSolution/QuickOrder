@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="./../resources/simple.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Gestión de mesas</h1>
+
+		<h:form id="frmTabla">
+
+			<p:confirmDialog global="true" appendTo="@(body)">
+				<p:commandButton value="Si" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:commandButton value="Nuevo" icon="ui-icon-document"
+				style="width:140px;"
+				actionListener="#{gestionMesaBean.nuevaEntidad()}"
+				update=":dlgNuevoEditarId :frmDatos" />
+
+			<p:commandButton value="Editar" icon="ui-icon-pencil"
+				style="width:140px;" actionListener="#{gestionMesaBean.editar()}"
+				update=":dlgNuevoEditarId :frmDatos" />
+
+			<p:commandButton value="Eliminar" icon="ui-icon-trash"
+				style="width:140px;" actionListener="#{gestionMesaBean.eliminar()}"
+				update=":frmTabla">
+				<p:confirm header="Confirmación"
+					message="¿Esta seguro que desea eliminar este registro?"
+					icon="ui-icon-alert" />
+			</p:commandButton>
+
+			<p:dataTable var="item" value="#{gestionMesaBean.lst}" first="0"
+				paginator="true" rows="20"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,20,30,40,50,100"
+				emptyMessage="Ningun registro encontrado..." selectionMode="single"
+				selection="#{gestionMesaBean.selected}" rowKey="#{item.id}">
+
+				<p:column headerText="ACCION" width="60">
+					<p:commandLink actionListener="#{gestionMesaBean.editar(item)}"
+						update=":dlgNuevoEditarId :frmDatos">
+						<h:graphicImage alt="Editar" url="/resources/icons/edit.png" />
+					</p:commandLink>
+
+					<p:commandLink actionListener="#{gestionMesaBean.eliminar(item)}"
+						update=":frmTabla">
+						<h:graphicImage alt="Eliminar" url="/resources/icons/delete.png" />
+						<p:confirm header="Confirmación"
+							message="¿Esta seguro que desea eliminar este registro?"
+							icon="ui-icon-alert" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column filterBy="#{item.numero}" sortBy="#{item.numero}"
+					filterMatchMode="contains">
+					<f:facet name="header">NUMERO</f:facet>
+					<h:outputText value="#{item.numero}" />
+				</p:column>
+
+				<p:column filterBy="#{item.descripcion}"
+					sortBy="#{item.descripcion}" filterMatchMode="contains">
+					<f:facet name="header">DESCRIPCION</f:facet>
+					<h:outputText value="#{item.descripcion}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="dlgNuevoEditarId" widgetVar="dlgNuevoEditar"
+			closeOnEscape="false" header="Nuevo/editar registro" modal="true"
+			appendTo="@(body)" visible="#{gestionMesaBean.visibleNuevoEditar}"
+			closable="false">
+
+			<h:form id="frmDatos">
+
+				<p:messages showDetail="true" showSummary="false" autoUpdate="true"
+					closable="true" />
+
+				<h:panelGrid id="pnlGrdData" columns="2" cellspacing="2"
+					cellpadding="0">
+
+					<p:outputLabel value="Id:" rendered="#{!gestionMesaBean.nuevo}" />
+					<p:outputLabel value="#{gestionMesaBean.entidad.id}"
+						rendered="#{!gestionMesaBean.nuevo}" />
+
+					<p:outputLabel for="tbxNumero" value="Numero:" />
+					<p:inputText id="tbxNumero" label="Numero" size="50"
+						value="#{gestionMesaBean.entidad.numero}" />
+
+					<p:outputLabel for="tbxDescripcion" value="Descripcion:" />
+					<p:inputText id="tbxDescripcion" label="Descripcion" size="50"
+						value="#{gestionMesaBean.entidad.descripcion}" />
+
+				</h:panelGrid>
+
+				<p:separator />
+
+				<h:panelGrid id="pnlGrdControl" columns="3" cellspacing="2"
+					cellpadding="0">
+
+					<p:commandButton value="Guardar" icon="ui-icon-disk"
+						style="width:100px;" actionListener="#{gestionMesaBean.guardar()}"
+						update=":dlgNuevoEditarId :frmDatos:pnlGrdData :frmTabla" />
+
+					<p:commandButton value="Nuevo" icon="ui-icon-document"
+						style="width:100px;" actionListener="#{gestionMesaBean.nuevo()}"
+						update=":frmDatos:pnlGrdData" />
+
+					<p:commandButton value="Salir" icon="ui-icon-close"
+						style="width:100px;"
+						actionListener="#{gestionMesaBean.setVisibleNuevoEditar(false)}"
+						update=":dlgNuevoEditarId" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

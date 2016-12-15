@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="./../resources/simple.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Pedidos</h1>
+
+		<h:form id="frmTabla">
+
+			<p:confirmDialog global="true" appendTo="@(body)">
+				<p:commandButton value="Si" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:dataTable var="item" value="#{gestionPedidoBean.lst}" first="0"
+				paginator="true" rows="20"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,20,30,40,50,100"
+				emptyMessage="Ningun registro encontrado..." selectionMode="single"
+				selection="#{gestionPedidoBean.selected}" rowKey="#{item.id}">
+
+				<p:column headerText="ACCION" width="60">
+					<p:commandLink actionListener="#{gestionPedidoBean.editar(item)}"
+						update=":dlgNuevoEditarId :frmDatos">
+						<h:graphicImage alt="Editar" url="/resources/icons/ver.png" />
+					</p:commandLink>
+
+				</p:column>
+
+				<p:column filterBy="#{item.id}" sortBy="#{item.id}"
+					filterMatchMode="contains">
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{item.id}" />
+				</p:column>
+
+
+				<p:column filterBy="#{item.cliente.ci}" sortBy="#{item.cliente.ci}"
+					filterMatchMode="contains">
+					<f:facet name="header">NIT</f:facet>
+					<h:outputText value="#{item.cliente.ci}" />
+				</p:column>
+
+				<p:column filterBy="#{item.cliente.nombreCompleto}"
+					sortBy="#{item.cliente.nombreCompleto}" filterMatchMode="contains">
+					<f:facet name="header">RAZON SOCIAL</f:facet>
+					<h:outputText value="#{item.cliente.nombreCompleto}" />
+				</p:column>
+
+				<p:column filterBy="#{item.mesa.numero}"
+					sortBy="#{item.mesa.numero}" filterMatchMode="contains">
+					<f:facet name="header">NRO. MESA</f:facet>
+					<h:outputText value="#{item.mesa.numero}" />
+				</p:column>
+
+				<p:column filterBy="#{item.estado}" sortBy="#{item.estado}"
+					filterMatchMode="contains">
+					<f:facet name="header">ESTADO</f:facet>
+					<h:outputText value="#{item.estado}" />
+				</p:column>
+
+				<p:column filterBy="#{item.fechaHora}" sortBy="#{item.fechaHora}"
+					filterMatchMode="contains">
+					<f:facet name="header">FECHA</f:facet>
+					<h:outputText value="#{item.fechaHora}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="dlgNuevoEditarId" widgetVar="dlgNuevoEditar"
+			closeOnEscape="false" header="Detalle del pedido" modal="true"
+			appendTo="@(body)" visible="#{gestionPedidoBean.visibleNuevoEditar}"
+			closable="false">
+
+			<h:form id="frmDatos">
+
+				<p:messages showDetail="true" showSummary="false" autoUpdate="true"
+					closable="true" />
+
+				<h:panelGrid id="pnlGrdData" columns="2" cellspacing="2"
+					cellpadding="0">
+
+					<p:outputLabel for="tbxMesa" value="Mesa:" />
+					<p:inputText id="tbxMesa" label="Mesa" size="150"
+						value="#{gestionPedidoBean.entidad.mesa.numero}" />
+
+				</h:panelGrid>
+
+
+				<p:dataTable var="item" value="#{gestionPedidoBean.lstProducto}"
+					first="0" paginator="true" rows="20"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,20,30,40,50,100"
+					emptyMessage="Ningun registro encontrado..." rowKey="#{item.id}">
+
+
+
+					<p:column filterBy="#{item[0]}" sortBy="#{item[0]}"
+						filterMatchMode="contains">
+						<f:facet name="header">CATEGORIA</f:facet>
+						<h:outputText value="#{item[0]}" />
+					</p:column>
+
+
+					<p:column filterBy="#{item[1]}" sortBy="#{item[1]}"
+						filterMatchMode="contains">
+						<f:facet name="header">PRODUCTO</f:facet>
+						<h:outputText value="#{item[1]}" />
+					</p:column>
+
+
+					<p:column filterBy="#{item[2]}" sortBy="#{item[2]}"
+						filterMatchMode="contains">
+						<f:facet name="header">DESCRIPCION</f:facet>
+						<h:outputText value="#{item[2]}" />
+					</p:column>
+
+
+					<p:column filterBy="#{item[3]}" sortBy="#{item[3]}"
+						filterMatchMode="contains">
+						<f:facet name="header">CANTIDAD</f:facet>
+						<h:outputText value="#{item[3]}" />
+					</p:column>
+
+
+
+				</p:dataTable>
+
+
+				<p:separator />
+
+				<h:panelGrid id="pnlGrdControl" columns="3" cellspacing="2"
+					cellpadding="0">
+
+					<p:commandButton value="ATENDIDO" icon="ui-icon-disk"
+						style="width:100px;"
+						actionListener="#{gestionPedidoBean.atendido()}"
+						update=":dlgNuevoEditarId :frmDatos:pnlGrdData :frmTabla" />
+
+					<p:commandButton value="Salir" icon="ui-icon-close"
+						style="width:100px;"
+						actionListener="#{gestionPedidoBean.setVisibleNuevoEditar(false)}"
+						update=":dlgNuevoEditarId" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>
