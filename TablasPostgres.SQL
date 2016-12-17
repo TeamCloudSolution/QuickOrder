@@ -66,10 +66,8 @@ CREATE TABLE PEDIDO (
 	ID bigint DEFAULT nextval(('PEDIDO_ID_seq'::text)::regclass) NOT NULL,
 	FECHA_HORA timestamp NOT NULL,
 	ESTADO varchar(50) NOT NULL,
-	CLIENTE varchar(150) NOT NULL,
-	ID_MESA bigint NOT NULL,
-	CI_EMPLEADO bigint NOT NULL,
-	CI_CLIENTE bigint NOT NULL
+	CI_CLIENTE bigint NOT NULL,
+	ID_MESA bigint NOT NULL
 )
 ;
 
@@ -82,7 +80,8 @@ CREATE TABLE PRODUCTO (
 	PRECIO decimal(10,2),
 	DESCRIPCION varchar(500),
 	STOCK bigint NOT NULL,
-	ID_CATEGORIA bigint NOT NULL
+	ID_CATEGORIA bigint NOT NULL,
+	IMAGEN varchar(50) 
 )
 ;
 
