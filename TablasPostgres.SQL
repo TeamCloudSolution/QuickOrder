@@ -157,9 +157,6 @@ ALTER TABLE PEDIDO ADD CONSTRAINT FK_PEDIDO_CLIENTE
 	FOREIGN KEY (CI_CLIENTE) REFERENCES CLIENTE (CI)
 ;
 
-ALTER TABLE PEDIDO ADD CONSTRAINT FK_PEDIDO_EMPLEADO 
-	FOREIGN KEY (CI_EMPLEADO) REFERENCES EMPLEADO (CI)
-;
 
 ALTER TABLE PEDIDO ADD CONSTRAINT FK_PEDIDO_MESA 
 	FOREIGN KEY (ID_MESA) REFERENCES MESA (ID)
@@ -170,6 +167,10 @@ ALTER TABLE PRODUCTO ADD CONSTRAINT FK_PRODUCTO_CATEGORIA
 ;
 
 
+INSERT INTO "public"."categoria" VALUES ('1', 'Tortas', 'Las mejores tortas de Santa Cruz');
+INSERT INTO "public"."categoria" VALUES ('6', 'Cafés/Té', 'Categoría de cafés y té');
+INSERT INTO "public"."categoria" VALUES ('7', 'Horneados', 'Horneados tipicos');
+--------------------------------------------------------------------------------------------------
 INSERT INTO "public"."producto" VALUES ('3', 'café con leche', '5.00', 'Café con leche', '10', '6', '3.png');
 INSERT INTO "public"."producto" VALUES ('4', 'toddy', '6.00', 'toddy', '50', '6', '4.png');
 INSERT INTO "public"."producto" VALUES ('5', 'Te con canela', '5.00', 'Te con canela y clavo de olor', '10', '6', '5.jpg');
@@ -186,10 +187,7 @@ INSERT INTO "public"."producto" VALUES ('16', 'Pan de arroz', '2.00', 'Pan de ar
 INSERT INTO "public"."producto" VALUES ('17', 'Masaco de yuca', '5.00', 'Masaco de yuca y charque', '30', '7', '17.jpg');
 --------------------------------------------------------------------------------------------------
 
-INSERT INTO "public"."categoria" VALUES ('1', 'Tortas', 'Las mejores tortas de Santa Cruz');
-INSERT INTO "public"."categoria" VALUES ('6', 'Cafés/Té', 'Categoría de cafés y té');
-INSERT INTO "public"."categoria" VALUES ('7', 'Horneados', 'Horneados tipicos');
---------------------------------------------------------------------------------------------------
+
 
 INSERT INTO "public"."mesa" VALUES ('1', 'Nro 1', 'Mesa nro. 1');
 INSERT INTO "public"."mesa" VALUES ('2', 'Nro 2', 'Mesa nro. 2');
