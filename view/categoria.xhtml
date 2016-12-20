@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	template="./../resources/simple.xhtml">
+	template="./../resources/simple.xhtml">	
+	
 
 	<ui:define name="content">
 
@@ -23,12 +24,11 @@
 				style="width:140px;"
 				actionListener="#{gestionCategoriaBean.nuevaEntidad()}"
 				update=":dlgNuevoEditarId :frmDatos" />
-
-			<p:commandButton value="Editar" icon="ui-icon-pencil"
+                        <p:commandButton value="Editar" icon="ui-icon-pencil"
 				style="width:140px;"
 				actionListener="#{gestionCategoriaBean.editar()}"
 				update=":dlgNuevoEditarId :frmDatos" />
-
+			
 			<p:commandButton value="Eliminar" icon="ui-icon-trash"
 				style="width:140px;"
 				actionListener="#{gestionCategoriaBean.eliminar()}"
