@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Gestión de Privilegios</h1>
+
+		<h:form id="frmDatos">
+			<p:panel header="Información general">
+				<h:panelGrid columns="2">
+
+					<p:outputLabel value="nombre:" />
+					<p:inputText value="#{privilegioBean.entidad.nombre}" />
+
+					<p:outputLabel value="descripción:" />
+					<p:inputText value="#{privilegioBean.entidad.descripcion}" />
+
+
+
+				</h:panelGrid>
+
+				<p:separator />
+
+				<h:panelGrid columns="2" cellspacing="15">
+					<p:commandButton value="Guardar"
+						actionListener="#{privilegioBean.guardar()}"
+						update=":frmTabla frmDatos" />
+					<p:commandButton value="Limpiar"
+						actionListener="#{privilegioBean.nuevo()}" update="@form" />
+				</h:panelGrid>
+
+			</p:panel>
+		</h:form>
+
+		<p:separator />
+
+		<h:form id="frmTabla">
+
+			<p:dataTable value="#{privilegioBean.lstPrivilegio}" var="priv">
+
+				<p:column headerText="acciones" width="50">
+					<p:commandButton icon="ui-icon-pencil" title="editar"
+						actionListener="#{privilegioBean.editar(priv.privilegioId)}"
+						update=":frmDatos" />
+					<p:commandButton icon="ui-icon-trash" title="eliminar"
+						actionListener="#{privilegioBean.eliminar(priv.privilegioId)}"
+						update=":frmTabla" />
+					<p:commandButton icon="ui-icon-pencil" title="permisos"
+						actionListener="#{privilegioBean.cargarTree()}"
+						update=":dlgPrivilegioId" oncomplete="dlgPrivilegio.show()" />
+				</p:column>
+
+				<p:column headerText="id">
+					<p:outputLabel value="#{priv.privilegioId}" />
+				</p:column>
+
+				<p:column headerText="nombre">
+					<p:outputLabel value="#{priv.nombre}" />
+				</p:column>
+
+				<p:column headerText="descripción">
+					<p:outputLabel value="#{priv.descripcion}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="dlgPrivilegioId" header="Privilegios por Grupo"
+			widgetVar="dlgPrivilegio" minHeight="250"
+			visible="#{privilegioBean.visibleDialogPrivilegio}" height="400"
+			width="400" closeOnEscape="true">
+
+			<h:form id="formDialog">
+
+				<!-- 				<p:commandButton value="Guardar" -->
+				<!-- 					actionListener="#{roleForm.guardarPermisos()}" ajax="false" -->
+				<!-- 					process="@this" update=":dlgPermisos" /> -->
+
+				<p:tree value="#{privilegioBean.roles}" var="doc"
+					selectionMode="checkbox"
+					selection="#{privilegioBean.nodosSeleccionados}">
+					<p:treeNode icon="ui-icon-document">
+						<h:outputText value="#{doc}" />
+					</p:treeNode>
+					<p:ajax event="select" />
+				</p:tree>
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

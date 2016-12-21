@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Gestión de Grupos</h1>
+
+		<h:form id="frmDatos">
+			<p:panel header="Información general">
+				<h:panelGrid columns="2">
+
+					<p:outputLabel value="nombre:" />
+					<p:inputText value="#{grupoBean.entidad.nombre}" />
+
+					<p:outputLabel value="descripción:" />
+					<p:inputText value="#{grupoBean.entidad.descripcion}" />
+
+					<p:outputLabel value="privilegio:" />
+					<p:selectOneMenu value="#{grupoBean.privilegioId}">
+						<f:selectItem itemLabel="Seleccione un privilegio" itemValue="0" />
+						<f:selectItems value="#{grupoBean.lstPrivilegio}" var="privilegio"
+							itemLabel="#{privilegio.nombre}"
+							itemValue="#{privilegio.privilegioId}" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+
+				<p:separator />
+
+				<h:panelGrid columns="2" cellspacing="15">
+					<p:commandButton value="Guardar"
+						actionListener="#{grupoBean.guardar()}"
+						update=":frmTabla frmDatos" />
+					<p:commandButton value="Limpiar"
+						actionListener="#{grupoBean.nuevo()}" update="@form" />
+				</h:panelGrid>
+
+			</p:panel>
+		</h:form>
+
+		<p:separator />
+
+		<h:form id="frmTabla">
+
+			<p:dataTable value="#{grupoBean.lstGrupo}" var="gru">
+
+				<p:column headerText="acciones" width="50">
+					<p:commandButton icon="ui-icon-pencil" title="editar"
+						actionListener="#{grupoBean.editar(gru.grupoId)}"
+						update=":frmDatos" />
+					<p:commandButton icon="ui-icon-trash" title="eliminar"
+						actionListener="#{grupoBean.eliminar(gru.grupoId)}"
+						update=":frmTabla" />
+				</p:column>
+
+				<p:column headerText="id">
+					<p:outputLabel value="#{gru.grupoId}" />
+				</p:column>
+
+				<p:column headerText="nombre">
+					<p:outputLabel value="#{gru.nombre}" />
+				</p:column>
+
+				<p:column headerText="descripción">
+					<p:outputLabel value="#{gru.descripcion}" />
+				</p:column>
+
+				<p:column headerText="privilegio">
+					<p:outputLabel value="#{gru.privilegio.nombre}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

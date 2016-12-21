@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="content">
+
+		<h1>Gestión de Formularios</h1>
+
+		<h:form id="frmDatos">
+			<p:panel header="Información general">
+				<h:panelGrid columns="2">
+
+					<p:outputLabel value="nombre:" />
+					<p:inputText value="#{formularioBean.entidad.nombre}" />
+
+					<p:outputLabel value="descripción:" />
+					<p:inputText value="#{formularioBean.entidad.descripcion}" />
+
+					<p:outputLabel value="url:" />
+					<p:inputText value="#{formularioBean.entidad.url}" />
+
+					<p:outputLabel value="acciones:" />
+					<p:selectCheckboxMenu value="#{formularioBean.lstAccionSelected}"
+						label="Acciones" filter="true" panelStyle="width:250px">
+						<f:selectItems value="#{formularioBean.lstAccion}" var="accion"
+							itemLabel="#{accion.nombre}" itemValue="#{accion.accionId}" />
+					</p:selectCheckboxMenu>
+
+					<p:outputLabel value="Menú:" />
+					<p:selectOneMenu value="#{formularioBean.menuId}">
+						<f:selectItem itemLabel="Seleccione un menú" itemValue="0" />
+						<f:selectItems value="#{formularioBean.lstMenu}" var="menu"
+							itemLabel="#{menu.nombre}" itemValue="#{menu.menuId}" />
+					</p:selectOneMenu>
+
+
+				</h:panelGrid>
+
+				<p:separator />
+
+				<h:panelGrid columns="2" cellspacing="15">
+					<p:commandButton value="Guardar"
+						actionListener="#{formularioBean.guardar()}"
+						update=":frmTabla frmDatos" />
+					<p:commandButton value="Limpiar"
+						actionListener="#{formularioBean.nuevo()}" update="@form" />
+				</h:panelGrid>
+
+			</p:panel>
+		</h:form>
+
+		<p:separator />
+
+		<h:form id="frmTabla">
+
+			<p:dataTable value="#{formularioBean.lstFormulario}" var="form">
+
+				<p:column headerText="formulario" width="50">
+					<p:commandButton icon="ui-icon-pencil" title="editar"
+						actionListener="#{formularioBean.editar(form.formularioId)}"
+						update=":frmDatos" />
+					<p:commandButton icon="ui-icon-trash" title="eliminar"
+						actionListener="#{formularioBean.eliminar(form.formularioId)}"
+						update=":frmTabla" />
+				</p:column>
+
+				<p:column headerText="id">
+					<p:outputLabel value="#{form.formularioId}" />
+				</p:column>
+
+				<p:column headerText="nombre">
+					<p:outputLabel value="#{form.nombre}" />
+				</p:column>
+
+				<p:column headerText="descripción">
+					<p:outputLabel value="#{form.descripcion}" />
+				</p:column>
+
+				<p:column headerText="url">
+					<p:outputLabel value="#{form.url}" />
+				</p:column>
+
+				<p:column headerText="menú">
+					<p:outputLabel value="#{form.menu.nombre}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
