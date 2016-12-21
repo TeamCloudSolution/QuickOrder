@@ -1,170 +1,306 @@
+CREATE TABLE accion ( 
+	accion_id bigint NOT NULL,
+	descripcion varchar(255),
+	estado boolean,
+	nombre varchar(255)
+)
+;
 
+CREATE TABLE bitacora ( 
+	bitacora_id bigint NOT NULL,
+	descripcion varchar(255),
+	fecha_hora timestamp,
+	ip varchar(255),
+	accion_id bigint,
+	formulario_id bigint,
+	usuario_id bigint
+)
+;
 
-CREATE TABLE CATEGORIA ( 
+CREATE TABLE Categoria ( 
 	ID bigint NOT NULL,
-	NOMBRE varchar(100) NOT NULL,
+	NOMBRE varchar(100),
 	DESCRIPCION varchar(500)
 )
 ;
 
-CREATE TABLE CLIENTE ( 
+CREATE TABLE Cliente ( 
 	CI bigint NOT NULL,
-	NOMBRE_COMPLETO varchar(500) NOT NULL
+	NOMBRE_COMPLETO varchar(500)
 )
 ;
 
-CREATE TABLE DETALLE_PEDIDO ( 
-	ID_PEDIDO bigint NOT NULL,
-	ID_PRODUCTO bigint NOT NULL,
-	CANTIDAD bigint NOT NULL
+CREATE TABLE DetallePedido ( 
+	CANTIDAD bigint,
+	ID_PEDIDO bigint,
+	ID_PRODUCTO bigint
 )
 ;
 
-CREATE TABLE EMPLEADO ( 
+CREATE TABLE Empleado ( 
 	CI bigint NOT NULL,
-	NOMBRE_COMPLETO varchar(150) NOT NULL,
+	NOMBRE_COMPLETO varchar(150),
 	CELULAR varchar(50),
-	CORREO varchar(150) NOT NULL
+	CORREO varchar(150)
 )
 ;
 
-CREATE TABLE EMPRESA ( 
+CREATE TABLE Empresa ( 
 	ID bigint NOT NULL,
-	NOMBRE varchar(150) NOT NULL,
-	SUCURSAL bigint NOT NULL,
-	DIRECCION varchar(150) NOT NULL,
-	NIT varchar(50) NOT NULL,
-	NRO_AUTORIZACION varchar(50) NOT NULL,
+	NOMBRE varchar(150),
+	SUCURSAL bigint,
+	DIRECCION varchar(150),
+	NIT varchar(50),
+	NRO_AUTORIZACION varchar(50),
 	COMENTARIO_FACTURA varchar(500)
 )
 ;
 
-CREATE TABLE FACTURA ( 
-	NRO_FACTURA varchar(150) NOT NULL,
-	COD_CONTROL varchar(50) NOT NULL,
-	TOTAL_PAGAR decimal(10,2) NOT NULL,
-	ID_EMPRESA bigint NOT NULL,
-	ID_PEDIDO bigint NOT NULL,
-	CI_EMPLEADO bigint
+CREATE TABLE Factura ( 
+	NRO_FACTURA varchar(150),
+	COD_CONTROL varchar(50),
+	TOTAL_PAGAR decimal(10,2),
+	ID_EMPRESA bigint,
+	ID_PEDIDO  bigint,
+	ID_EMPLEADO bigint,
+	usuario_id bigint
 )
 ;
 
-CREATE SEQUENCE MESA_ID_seq INCREMENT 1 START 1
+CREATE TABLE formulario ( 
+	formulario_id bigint NOT NULL,
+	descripcion varchar(255),
+	estado boolean,
+	nombre varchar(255),
+	url varchar(255),
+	menu_id bigint
+)
 ;
 
-CREATE TABLE MESA ( 
-	ID bigint DEFAULT nextval(('MESA_ID_seq'::text)::regclass) NOT NULL,
-	NUMERO varchar(50) NOT NULL,
+CREATE TABLE formulario_accion ( 
+	formulario_accion_id bigint NOT NULL,
+	estado boolean,
+	accion_id bigint,
+	formulario_id bigint
+)
+;
+
+CREATE TABLE grupo ( 
+	grupo_id bigint NOT NULL,
+	descripcion varchar(255),
+	estado boolean,
+	nombre varchar(255),
+	privilegio_id bigint
+)
+;
+
+CREATE TABLE menu ( 
+	menu_id bigint NOT NULL,
+	descripcion char(100),
+	estado boolean,
+	nombre char(50),
+	menu_id_padre bigint
+)
+;
+
+CREATE TABLE Mesa ( 
+	ID bigint NOT NULL,
+	NUMERO varchar(50),
 	DESCRIPCION varchar(150)
 )
 ;
 
-CREATE SEQUENCE PEDIDO_ID_seq INCREMENT 1 START 1
-;
-
-CREATE TABLE PEDIDO ( 
-	ID bigint DEFAULT nextval(('PEDIDO_ID_seq'::text)::regclass) NOT NULL,
-	FECHA_HORA timestamp NOT NULL,
-	ESTADO varchar(50) NOT NULL,
-	CI_CLIENTE bigint NOT NULL,
-	ID_MESA bigint NOT NULL
+CREATE TABLE Pedido ( 
+	ID bigint NOT NULL,
+	FECHA_HORA timestamp,
+	ESTADO varchar(50),
+	CI_CLIENTE  bigint,
+	ID_MESA  bigint
 )
 ;
 
-CREATE SEQUENCE PRODUCTO_ID_seq INCREMENT 1 START 1
+CREATE TABLE privilegio ( 
+	privilegio_id bigint NOT NULL,
+	descripcion varchar(255),
+	estado boolean,
+	nombre varchar(255)
+)
 ;
 
-CREATE TABLE PRODUCTO ( 
-	ID bigint DEFAULT nextval(('PRODUCTO_ID_seq'::text)::regclass) NOT NULL,
+CREATE TABLE privilegio_formulario ( 
+	privilegio_formulario_id bigint NOT NULL,
+	estado boolean,
+	accion_id bigint,
+	formulario_id bigint,
+	privilegio_id bigint
+)
+;
+
+CREATE TABLE Producto ( 
+	ID bigint NOT NULL,
 	NOMBRE varchar(500),
 	PRECIO decimal(10,2),
 	DESCRIPCION varchar(500),
-	STOCK bigint NOT NULL,
-	ID_CATEGORIA bigint NOT NULL,
-	IMAGEN varchar(50) 
+	STOCK bigint,
+	ID_CATEGORIA bigint
 )
 ;
 
+CREATE TABLE usuario ( 
+	usuario_id bigint NOT NULL,
+	apellido_materno varchar(255),
+	apellido_paterno varchar(255),
+	estado boolean,
+	login varchar(255),
+	password varchar(255),
+	grupo_id bigint
+)
+;
 
-ALTER TABLE CATEGORIA ADD CONSTRAINT PK_CATEGORIA 
+ALTER TABLE accion ADD CONSTRAINT PK_accion 
+	PRIMARY KEY (accion_id)
+;
+
+ALTER TABLE bitacora ADD CONSTRAINT PK_bitacora 
+	PRIMARY KEY (bitacora_id)
+;
+
+ALTER TABLE Categoria ADD CONSTRAINT PK_Categoria 
 	PRIMARY KEY (ID)
 ;
 
-
-ALTER TABLE CLIENTE ADD CONSTRAINT PK_CLIENTE 
+ALTER TABLE Cliente ADD CONSTRAINT PK_Cliente 
 	PRIMARY KEY (CI)
 ;
 
-
-ALTER TABLE DETALLE_PEDIDO ADD CONSTRAINT PK_DETALLE_PEDIDO 
-	PRIMARY KEY (ID_PEDIDO, ID_PRODUCTO)
-;
-
-
-ALTER TABLE EMPLEADO ADD CONSTRAINT PK_EMPLEADO 
+ALTER TABLE Empleado ADD CONSTRAINT PK_Empleado 
 	PRIMARY KEY (CI)
 ;
 
-
-ALTER TABLE EMPRESA ADD CONSTRAINT PK_EMPRESA 
+ALTER TABLE Empresa ADD CONSTRAINT PK_Empresa 
 	PRIMARY KEY (ID)
 ;
 
-
-ALTER TABLE FACTURA ADD CONSTRAINT PK_FACTURA 
-	PRIMARY KEY (NRO_FACTURA, COD_CONTROL)
+ALTER TABLE formulario ADD CONSTRAINT PK_formulario 
+	PRIMARY KEY (formulario_id)
 ;
 
+ALTER TABLE formulario_accion ADD CONSTRAINT PK_formulario_accion 
+	PRIMARY KEY (formulario_accion_id)
+;
 
-ALTER TABLE MESA ADD CONSTRAINT PK_MESA 
+ALTER TABLE grupo ADD CONSTRAINT PK_grupo 
+	PRIMARY KEY (grupo_id)
+;
+
+ALTER TABLE menu ADD CONSTRAINT PK_menu 
+	PRIMARY KEY (menu_id)
+;
+
+ALTER TABLE Mesa ADD CONSTRAINT PK_Mesa 
 	PRIMARY KEY (ID)
 ;
 
-
-ALTER TABLE PEDIDO ADD CONSTRAINT PK_PEDIDO 
+ALTER TABLE Pedido ADD CONSTRAINT PK_Pedido 
 	PRIMARY KEY (ID)
 ;
 
+ALTER TABLE privilegio ADD CONSTRAINT PK_privilegio 
+	PRIMARY KEY (privilegio_id)
+;
 
-ALTER TABLE PRODUCTO ADD CONSTRAINT PK_PRODUCTO 
+ALTER TABLE privilegio_formulario ADD CONSTRAINT PK_privilegio_formulario 
+	PRIMARY KEY (privilegio_formulario_id)
+;
+
+ALTER TABLE Producto ADD CONSTRAINT PK_Producto 
 	PRIMARY KEY (ID)
 ;
 
-
-
-
-ALTER TABLE DETALLE_PEDIDO ADD CONSTRAINT FK_DETALLE_PEDIDO_PEDIDO 
-	FOREIGN KEY (ID_PEDIDO) REFERENCES PEDIDO (ID)
+ALTER TABLE usuario ADD CONSTRAINT PK_usuario 
+	PRIMARY KEY (usuario_id)
 ;
 
-ALTER TABLE DETALLE_PEDIDO ADD CONSTRAINT FK_DETALLE_PEDIDO_PRODUCTO 
-	FOREIGN KEY (ID_PRODUCTO) REFERENCES PRODUCTO (ID)
+ALTER TABLE bitacora ADD CONSTRAINT FK_bitacora_accion 
+	FOREIGN KEY (accion_id) REFERENCES accion (accion_id)
 ;
 
-ALTER TABLE FACTURA ADD CONSTRAINT FK_FACTURA_EMPLEADO 
-	FOREIGN KEY (CI_EMPLEADO) REFERENCES EMPLEADO (CI)
+ALTER TABLE bitacora ADD CONSTRAINT FK_bitacora_formulario 
+	FOREIGN KEY (formulario_id) REFERENCES formulario (formulario_id)
 ;
 
-ALTER TABLE FACTURA ADD CONSTRAINT FK_FACTURA_EMPRESA 
-	FOREIGN KEY (ID_EMPRESA) REFERENCES EMPRESA (ID)
+ALTER TABLE bitacora ADD CONSTRAINT FK_bitacora_usuario 
+	FOREIGN KEY (usuario_id) REFERENCES usuario (usuario_id)
 ;
 
-ALTER TABLE FACTURA ADD CONSTRAINT FK_FACTURA_PEDIDO 
-	FOREIGN KEY (ID_PEDIDO) REFERENCES PEDIDO (ID)
+ALTER TABLE DetallePedido ADD CONSTRAINT FK_DetallePedido_Pedido 
+	FOREIGN KEY (ID_PEDIDO) REFERENCES Pedido (ID)
 ;
 
-ALTER TABLE PEDIDO ADD CONSTRAINT FK_PEDIDO_CLIENTE 
-	FOREIGN KEY (CI_CLIENTE) REFERENCES CLIENTE (CI)
+ALTER TABLE DetallePedido ADD CONSTRAINT FK_DetallePedido_Producto 
+	FOREIGN KEY (ID_PRODUCTO) REFERENCES Producto (ID)
 ;
 
-
-ALTER TABLE PEDIDO ADD CONSTRAINT FK_PEDIDO_MESA 
-	FOREIGN KEY (ID_MESA) REFERENCES MESA (ID)
+ALTER TABLE Factura ADD CONSTRAINT FK_Factura_Empleado 
+	FOREIGN KEY (ID_EMPLEADO) REFERENCES Empleado (CI)
 ;
 
-ALTER TABLE PRODUCTO ADD CONSTRAINT FK_PRODUCTO_CATEGORIA 
-	FOREIGN KEY (ID_CATEGORIA) REFERENCES CATEGORIA (ID)
+ALTER TABLE Factura ADD CONSTRAINT FK_Factura_Empresa 
+	FOREIGN KEY (ID_EMPRESA) REFERENCES Empresa (ID)
 ;
+
+ALTER TABLE Factura ADD CONSTRAINT FK_Factura_Pedido 
+	FOREIGN KEY (ID_PEDIDO ) REFERENCES Pedido (ID)
+;
+
+ALTER TABLE Factura ADD CONSTRAINT FK_Factura_usuario 
+	FOREIGN KEY (usuario_id) REFERENCES usuario (usuario_id)
+;
+
+ALTER TABLE formulario ADD CONSTRAINT FK_formulario_menu 
+	FOREIGN KEY (menu_id) REFERENCES menu (menu_id)
+;
+
+ALTER TABLE formulario_accion ADD CONSTRAINT FK_formulario_accion_accion 
+	FOREIGN KEY (accion_id) REFERENCES accion (accion_id)
+;
+
+ALTER TABLE formulario_accion ADD CONSTRAINT FK_formulario_accion_formulario 
+	FOREIGN KEY (formulario_id) REFERENCES formulario (formulario_id)
+;
+
+ALTER TABLE grupo ADD CONSTRAINT FK_grupo_privilegio 
+	FOREIGN KEY (privilegio_id) REFERENCES privilegio (privilegio_id)
+;
+
+ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Cliente 
+	FOREIGN KEY (CI_CLIENTE ) REFERENCES Cliente (CI)
+;
+
+ALTER TABLE Pedido ADD CONSTRAINT FK_Pedido_Mesa 
+	FOREIGN KEY (ID_MESA ) REFERENCES Mesa (ID)
+;
+
+ALTER TABLE privilegio_formulario ADD CONSTRAINT FK_privilegio_formulario_accion 
+	FOREIGN KEY (accion_id) REFERENCES accion (accion_id)
+;
+
+ALTER TABLE privilegio_formulario ADD CONSTRAINT FK_privilegio_formulario_formulario 
+	FOREIGN KEY (formulario_id) REFERENCES formulario (formulario_id)
+;
+
+ALTER TABLE privilegio_formulario ADD CONSTRAINT FK_privilegio_formulario_privilegio 
+	FOREIGN KEY (privilegio_id) REFERENCES privilegio (privilegio_id)
+;
+
+ALTER TABLE Producto ADD CONSTRAINT FK_Producto_Categoria 
+	FOREIGN KEY (ID_CATEGORIA) REFERENCES Categoria (ID)
+;
+
+ALTER TABLE usuario ADD CONSTRAINT FK_usuario_grupo 
+	FOREIGN KEY (grupo_id) REFERENCES grupo (grupo_id)
+;
+
 
 
 INSERT INTO "public"."categoria" VALUES ('1', 'Tortas', 'Las mejores tortas de Santa Cruz');
