@@ -94,9 +94,9 @@ public class LoginBean implements Serializable {
 			for (Menu menu : lstMenu) {
 				DefaultSubMenu submenu = new DefaultSubMenu();
 				submenu.setLabel(menu.getNombre());
-				model.addElement(submenu);
 				List<Formulario> lstFormulario = getFormulariosPorMenu(menu);
-				if (lstFormulario != null) {
+				if (lstFormulario != null && lstFormulario.size() > 0) {
+					model.addElement(submenu);
 					for (Formulario form : lstFormulario) {
 						DefaultMenuItem item = new DefaultMenuItem();
 						item.setValue(form.getNombre());
@@ -112,7 +112,7 @@ public class LoginBean implements Serializable {
 						submenu1.setLabel(menu1.getNombre());
 						submenu.addElement(submenu1);
 						List<Formulario> lstFormulario1 = getFormulariosPorMenu(menu1);
-						if (lstFormulario1 != null) {
+						if (lstFormulario1 != null && lstFormulario.size() > 0) {
 							for (Formulario form : lstFormulario1) {
 								DefaultMenuItem item = new DefaultMenuItem();
 								item.setValue(form.getNombre());
